@@ -180,6 +180,8 @@ public class GeoPoint {
         if (!(gp instanceof GeoPoint))
             return false;
         GeoPoint geoPoint = (GeoPoint)gp;
+		this.checkRep();
+
         return (this.latitude == geoPoint.latitude) && (this.longitude == geoPoint.latitude);
   	}
 
@@ -205,6 +207,7 @@ public class GeoPoint {
   	@Override
   	public String toString()
     {
+		this.checkRep();
         return String.format("Geographic Point: latitude %d, longitude %d", this.latitude, this.longitude);
   	}
 
