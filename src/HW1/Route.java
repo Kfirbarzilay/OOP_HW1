@@ -130,7 +130,7 @@ public class Route {
      *                                     a[i].end  == a[i+1].start))
      * </pre>
      * where <code>a[n]</code> denotes the nth element of the Iterator.
-     * @see homework1.GeoFeature
+     * @see HW1.GeoFeature
      **/
   	public Iterator<GeoFeature> getGeoFeatures() {
   		// TODO Implement this method
@@ -149,7 +149,7 @@ public class Route {
      *      this.length       = sum (0 <= i < a.length) . a[i].length
      * </pre>
      * where <code>a[n]</code> denotes the nth element of the Iterator.
-     * @see homework1.GeoSegment
+     * @see HW1.GeoSegment
      **/
   	public Iterator<GeoSegment> getGeoSegments() {
   		// TODO Implement this method

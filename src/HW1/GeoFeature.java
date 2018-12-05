@@ -47,7 +47,8 @@ public class GeoFeature {
 	
 	
   	// TODO Write abstraction function and representation invariant
-
+	// Representation invariant:
+	//
 	
 	/**
      * Constructs a new GeoFeature.
@@ -153,7 +154,7 @@ public class GeoFeature {
      *                                   a[i].p2d  == a[i+1].p1))
      * </pre>
      * where <code>a[n]</code> denotes the nth element of the Iterator.
-     * @see homework1.GeoSegment
+     * @see HW1.GeoSegment
      */
   	public Iterator<GeoSegment> getGeoSegments() {
   		// TODO Implement this method

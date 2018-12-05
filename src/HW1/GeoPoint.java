@@ -58,26 +58,20 @@ public class GeoPoint {
     // The object's latitude.
   	private final int latitude;
 
-    // The object's longtitude.
-    private final int longtitude;
+    // The object's longitude.
+    private final int longitude;
 
-    // The millionith of a degree
-    private final int millionith = 1000000;
+    // The millionth of a degree
+    private final int millionth = 1000000;
 
-	// Implementation hint:
-	// Doubles and floating point math can cause some problems. The exact
-	// value of a double can not be guaranteed except within some epsilon.
-	// Because of this, using doubles for the equals() and hashCode()
-	// methods can have erroneous results. Do not use floats or doubles for
-	// any computations in hashCode(), equals(), or where any other time 
-	// exact values are required. (Exact values are not required for length 
-	// and distance computations). Because of this, you should consider 
-	// using ints for your internal representation of GeoPoint. 
+    // Representation invariant for each GeoPoint gp:
+    // (MIN_LATITUDE <= gp.latitude  && gp.latitude<= MAX_LATITUDE)
+    //  && (MIN_LONGITUDE <= gp.longitude &&  gp.longitude <= MAX_LONGITUDE)
 
-  	
-  	// TODO Write abstraction function and representation invariant
-  	
-  	
+    // Abstraction Function:
+    // A Geographic point constructed by latitude, gp.latitude, and longitude coordinate, gp.longitude.
+    // Both are in millionth of a degree.
+
   	/**
   	 * Constructs GeoPoint from a latitude and longitude.
      * @requires the point given by (latitude, longitude) in millionths
@@ -90,7 +84,7 @@ public class GeoPoint {
   	public GeoPoint(int latitude, int longitude)
 	{
   		this.latitude = latitude;
-  		this.longtitude = longitude;
+  		this.longitude = longitude;
 		this.checkRep();
   	}
 
@@ -111,7 +105,7 @@ public class GeoPoint {
      */
   	public int getLongitude()
     {
-  		return this.longtitude;
+  		return this.longitude;
   	}
 
 
@@ -130,16 +124,18 @@ public class GeoPoint {
 
 		// Calculates latitude distance in meters.
 		double latitudeDelta = (double)(this.latitude - gp.getLatitude());
-        latitudeDelta /= millionith; // from millionith of deg to deg.
-        double latitudeDelta = (double)(Math.pow(latitudeDelta * KM_PER_DEGREE_LATITUDE,2));
+        latitudeDelta /= millionth; // from millionth of deg to deg.
+        latitudeDelta = Math.pow(latitudeDelta * KM_PER_DEGREE_LATITUDE,2);
 
-        // Calculates longtitude distance in meters.
-		double longtitudeDelta = (double)(this.longitude - gp.getLongitude());
-        longtitudeDelta /= millionith; // from millionith of deg to deg.
-		double longtitudeDelta = (double)(Math.pow(longtitudeDelta * KM_PER_DEGREE_LONGITUDE,2));
+        // Calculates longitude distance in meters.
+		double longitudeDelta = (double)(this.longitude - gp.getLongitude());
+        longitudeDelta /= millionth; // from millionth of deg to deg.
+        longitudeDelta = Math.pow(longitudeDelta * KM_PER_DEGREE_LONGITUDE,2);
 
-		// Oclidean distance between two points.
-		return Math.sqrt(latitudeDelta + longtitudeDelta);
+        checkRep();
+
+		// Ocleadean distance between two points.
+		return Math.sqrt(latitudeDelta + longitudeDelta);
   	}
 
 
@@ -157,24 +153,17 @@ public class GeoPoint {
         assert !this.equals(gp) : "Same GeoPoint";
 
         this.checkRep();
+
         double latitudeDelta = (gp.latitude - this.latitude)  * KM_PER_DEGREE_LATITUDE;
-        double longitudeDelta = (gp.longtitude - this.longtitude)  * KM_PER_DEGREE_LONGITUDE;
-        double thetaInRadians = Math.toDegrees(Math.atan2(longitudeDelta,latitudeDelta));
-        if(thetaInRadians < 0){ // A positive representation of the heading.
-            thetaInRadians += 360;
+        double longitudeDelta = (gp.longitude - this.longitude)  * KM_PER_DEGREE_LONGITUDE;
+        double thetaInDegrees = Math.toDegrees(Math.atan2(longitudeDelta,latitudeDelta));
+
+        if(thetaInDegrees < 0)
+        { // A positive representation of the heading.
+            thetaInDegrees += 360;
         }
-        return thetaInRadians;
-
-		 //	Implementation hints:
-		 // 1. You may find the mehtod Math.atan2() useful when
-		 // implementing this method. More info can be found at:
-		 // http://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
-		 //
-		 // 2. Keep in mind that in our coordinate system, north is 0
-		 // degrees and degrees increase in the clockwise direction. By
-		 // mathematical convention, "east" is 0 degrees, and degrees
-		 // increase in the counterclockwise direction. 
-
+        double h = (450 - thetaInDegrees) % 360;
+        return h;
   	}
 
 
@@ -183,8 +172,15 @@ public class GeoPoint {
      * @return gp != null && (gp instanceof GeoPoint) &&
      * 		   gp.latitude = this.latitude && gp.longitude = this.longitude
      **/
-  	public boolean equals(Object gp) {
-  		// TODO Implement this method
+    @Override
+    public boolean equals(Object gp)
+    {
+        this.checkRep();
+
+        if (!(gp instanceof GeoPoint))
+            return false;
+        GeoPoint geoPoint = (GeoPoint)gp;
+        return (this.latitude == geoPoint.latitude) && (this.longitude == geoPoint.latitude);
   	}
 
 
@@ -192,7 +188,9 @@ public class GeoPoint {
      * Returns a hash code value for this GeoPoint.
      * @return a hash code value for this GeoPoint.
    	 **/
-  	public int hashCode() {
+  	@Override
+  	public int hashCode()
+    {
     	// This implementation will work, but you may want to modify it
     	// for improved performance.
 
@@ -204,8 +202,20 @@ public class GeoPoint {
      * Returns a string representation of this GeoPoint.
      * @return a string representation of this GeoPoint.
      **/
-  	public String toString() {
-  		// TODO Implement this method
+  	@Override
+  	public String toString()
+    {
+        return String.format("Geographic Point: latitude %d, longitude %d", this.latitude, this.longitude);
   	}
 
+  	private void checkRep()
+    {
+        assert (MIN_LATITUDE <= this.latitude  && this.latitude<= MAX_LATITUDE)
+                && (MIN_LONGITUDE <= this.longitude &&  this.longitude <= MAX_LONGITUDE)
+                : "Violated Rep. Inv";
+    }
+  	// TODO: check if more methods needed.
+
+
 }
+

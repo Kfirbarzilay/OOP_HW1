@@ -4,7 +4,7 @@ package HW1;
  * A GeoSegment models a straight line segment on the earth. GeoSegments 
  * are immutable.
  * <p>
- * A compass heading is a nonnegative real number less than 360. In compass
+ * A compass heading is a non-negative real number less than 360. In compass
  * headings, north = 0, east = 90, south = 180, and west = 270.
  * <p>
  * When used in a map, a GeoSegment might represent part of a street,
@@ -41,17 +41,36 @@ package HW1;
  **/
 public class GeoSegment  {
 
-	
-  	// TODO Write abstraction function and representation invariant
-	
+	private final String name;
+	private final GeoPoint p1;
+	private final GeoPoint p2;
+	private final Double length;
+	private final Double heading;
+
+	// Rep. Inv. for each GeoSegment:
+	// this.name is a non empty string of letters.
+	// this.p1 and this.p2 can be of the same value.
+	// this.length >= 0.
+	// this.angle is a real value and 360 > this.angle >= 0. If (p1.isEqual(p2) == true) heading is not defined.
+
+	// Abstraction Function:
+	// A GeoSegment is determined between two GeoPoints this.p1 and this.p2, hence it's a straight line with a non-negative
+	// length this.length and a heading from this.p1 to this.p2.
+	// A GeoSegment has a name.
 	
   	/**
      * Constructs a new GeoSegment with the specified name and endpoints.
      * @requires name != null && p1 != null && p2 != null
      * @effects constructs a new GeoSegment with the specified name and endpoints.
      **/
-  	public GeoSegment(String name, GeoPoint p1, GeoPoint p2) {
-  		// TODO Implement this method
+  	public GeoSegment(String name, GeoPoint p1, GeoPoint p2)
+	{
+  		this.name = name;
+  		this.p1 = p1;
+  		this.p2 = p2;
+  		this.length = p1.distanceTo(p2);
+  		this.heading = p1.headingTo(p2);
+  		this.checkRep();
   	}
 
 
@@ -60,8 +79,11 @@ public class GeoSegment  {
      * @return a new GeoSegment gs such that gs.name = this.name
      *         && gs.p1 = this.p2 && gs.p2 = this.p1
      **/
-  	public GeoSegment reverse() {
-  		// TODO Implement this method
+  	public GeoSegment reverse()
+	{
+	    this.checkRep();
+  		// Construct the reversed GeoSegment
+        return new GeoSegment(this.name, this.p2, this.p1);
   	}
 
 
@@ -69,7 +91,8 @@ public class GeoSegment  {
   	 * Returns the name of this GeoSegment.
      * @return the name of this GeoSegment.
      */
-  	public String getName() {
+  	public String getName()
+    {
   		// TODO Implement this method
   	}
 
