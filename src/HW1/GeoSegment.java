@@ -54,11 +54,10 @@ public class GeoSegment  {
 	// this.angle is a real value and 360 > this.angle >= 0. If (p1.isEqual(p2) == true) heading is not defined.
 
 	// Abstraction Function:
-	// A GeoSegment is determined between two GeoPoints this.p1 and this.p2, hence it's a straight line with a non-negative
-	// length this.length and a heading from this.p1 to this.p2.
-	// A GeoSegment has a name.
-	
-  	/**
+	// A GeoSegment with a name this.name is determined between two GeoPoints this.p1 and this.p2, hence it's a straight
+    // line with a non-negative length this.length and with a heading from this.p1 to this.p2.
+
+	/**
      * Constructs a new GeoSegment with the specified name and endpoints.
      * @requires name != null && p1 != null && p2 != null
      * @effects constructs a new GeoSegment with the specified name and endpoints.
@@ -93,7 +92,7 @@ public class GeoSegment  {
      */
   	public String getName()
     {
-  		// TODO Implement this method
+  		return this.name;
   	}
 
 
@@ -101,8 +100,9 @@ public class GeoSegment  {
   	 * Returns first endpoint of the segment.
      * @return first endpoint of the segment.
      */
-  	public GeoPoint getP1() {
-  		// TODO Implement this method
+  	public GeoPoint getP1()
+    {
+  		return this.p1;
   	}
 
 
