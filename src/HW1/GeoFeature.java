@@ -355,18 +355,32 @@ public class GeoFeature {
 	// connected to this.end with a heading equal to this.endHeading.
 	private void checkRep()
 	{
-		assert  this.start instanceof GeoPoint : "this.start is not a GeoPoint in GeoFeature";
-		assert  this.end instanceof GeoPoint : "this.end is not a GeoPoint in GeoFeature";
+		assert this.name != null && !this.name.isEmpty() : "this.name is not valid";
+		assert this.start != null : "this.start is not a GeoPoint in GeoFeature";
+		assert this.end != null : "this.end is not a GeoPoint in GeoFeature";
 		assert 0 <= this.startHeading && this.startHeading < 360 : "this.startHeading is not valid";
 		assert 0 <= this.endHeading && this.endHeading < 360 : "this.endHeading is not valid";
 		assert 	this.geoSegments != null && !this.geoSegments.isEmpty() : "this.geoSegments is not valid";
-		assert this.name != null && !this.name.isEmpty() : "this.name is not valid";
 		assert this.length >= 0 : "this.length is not valid";
 
-		Iterator<GeoSegment> thisIt = _geoSegments.iterator();
-		while (thisIt.hasNext()) {// Iterator design pattern is the best practise in order to get maintanable code
-			boolean check = _name.equals(thisIt.next().get_name());
-			assert(check) : "The names of the Geosegments are not the same!";
+		// Now checking geoSegments Rep. Inv.:
+		// for all integers i
+		//     (0 <= i < geoSegments.length-1 => (geoSegments[i].name == geoSegments[i+1].name
+		//     && geoSegments[i].p2  == geoSegments[i+1].p1))
+		Iterator<GeoSegment> iter = this.geoSegments.iterator();
+		GeoSegment currSeg = iter.next();
+		while (iter.hasNext())
+		{
+			assert this.name.equals(currSeg.getName()) : "GeoSegment don't have the same name: " + currSeg ;
+			if (iter.hasNext())
+			{
+				GeoSegment nextGeoSegment = iter.next();
+				assert currSeg.getP2() != nextGeoSegment.getP1(): "GeoSegment " + currSeg + " and GeoSegment " + nextGeoSegment
+						+ " are not connected";
+
+				// Moving to the next GeoSegment
+				currSeg = nextGeoSegment;
+			}
 		}
 	}
 }
