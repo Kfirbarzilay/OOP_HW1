@@ -166,11 +166,13 @@ public class GeoSegment  {
   	public boolean equals(Object gs)
 	{
 		this.checkRep();
-
 		if (!(gs instanceof GeoSegment)) // No need to check for null. this condition covers it.
 			return false;
-		GeoSegment geoSegment = (GeoSegment) gs;
-		return this.p1.equals(geoSegment.p1) && this.p2.equals(geoSegment.p2) && this.name.equals(geoSegment.getName()); // The last method is a String method.
+		GeoSegment geoSegment = (GeoSegment) gs; // Copy value equality.
+		boolean p1Equals = this.p1.equals(geoSegment.getP1());
+		boolean p2Equals = this.p2.equals(geoSegment.getP2());
+		boolean nameEquals = this.name.equals(geoSegment.getName()); // The last method is a String method.
+        return p1Equals && p2Equals && nameEquals;
   	}
 
 

@@ -156,14 +156,19 @@ public class GeoPoint {
 
         double latitudeDelta = (gp.latitude - this.latitude)  * KM_PER_DEGREE_LATITUDE;
         double longitudeDelta = (gp.longitude - this.longitude)  * KM_PER_DEGREE_LONGITUDE;
+
+        // The calculation is based on how we want to place our coordinate system:
+		// We want the angle to increase in range of [0,360) going from north and in a clockwise direction
+		// (east ==> south ==> west ==> north). So we place the x axis to point north which is equivalent to latitude
+		// positive direction and place the y axis to point east which is equivalent to the longitude
+		// positive direction.
         double thetaInDegrees = Math.toDegrees(Math.atan2(longitudeDelta,latitudeDelta));
 
         if(thetaInDegrees < 0)
         { // A positive representation of the heading.
             thetaInDegrees += 360;
         }
-        double h = (450 - thetaInDegrees) % 360;
-        return h;
+        return thetaInDegrees;
   	}
 
 
@@ -182,7 +187,7 @@ public class GeoPoint {
         GeoPoint geoPoint = (GeoPoint)gp;
 		this.checkRep();
 
-        return (this.latitude == geoPoint.latitude) && (this.longitude == geoPoint.latitude);
+        return (this.latitude == geoPoint.latitude) && (this.longitude == geoPoint.longitude);
   	}
 
 
