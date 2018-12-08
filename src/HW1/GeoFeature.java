@@ -375,7 +375,7 @@ public class GeoFeature {
 			if (iter.hasNext())
 			{
 				GeoSegment nextGeoSegment = iter.next();
-				assert currSeg.getP2() != nextGeoSegment.getP1(): "GeoSegment " + currSeg + " and GeoSegment " + nextGeoSegment
+				assert currSeg.getP2().equals(nextGeoSegment.getP1()): "GeoSegment " + currSeg + " and GeoSegment " + nextGeoSegment
 						+ " are not connected";
 
 				// Moving to the next GeoSegment

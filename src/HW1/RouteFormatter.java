@@ -1,6 +1,8 @@
 package HW1;
 
 
+import java.util.Iterator;
+
 /**
  * A RouteFormatter class knows how to create a textual description of
  * directions from one location to another. The class is abstract to
@@ -18,13 +20,36 @@ public abstract class RouteFormatter {
      * @return A newline-terminated directions <tt>String</tt> giving
      * 	       human-readable directions from start to end along this route.
      **/
-  	public String computeDirections(Route route, double heading) {
+  	public String computeDirections(Route route, double heading)
+	{
   		// Implementation hint:
 		// This method should call computeLine() for each geographic
 		// feature in this route and concatenate the results into a single
 		// String.
-  		
-  		// TODO Implement this method
+		assert route != null : "Can't compute directions since route is null";
+		assert 0 <= heading && heading < 360 : "Heading is not valid";
+
+		// Initialize the direction message and place an iterator over the route's geoFeatures list.
+		String directions = "";
+		Iterator<GeoFeature> geoFeatureIterator = route.getGeoFeatures();
+		GeoFeature currGeoFeature = null;
+
+		// Save the current heading for each iteration
+		double currHeading = heading;
+
+		// Iterate through all the geoFeatures list and compute directions by each GeoFeature line by line.
+		while (geoFeatureIterator.hasNext())
+		{
+			currGeoFeature = geoFeatureIterator.next();
+
+			// Using polymorphism to call the correct computeLine method.
+			directions += computeLine(currGeoFeature, currHeading);
+
+			// Getting the new heading to needed to compute next line.
+			currHeading = currGeoFeature.getEndHeading();
+		}
+
+		return directions;
   	}
 
 
@@ -60,8 +85,58 @@ public abstract class RouteFormatter {
      * </pre>
      * and likewise for left turns.
      */
-  	protected String getTurnString(double origHeading, double newHeading) {
-  		// TODO Implement this method
-  	}
+  	protected String getTurnString(double origHeading, double newHeading)
+	{
+		assert 0 <= origHeading && origHeading < 360 : "originalHeading is not valid";
+		assert 0 <= newHeading && newHeading < 360 : "newHeading is not valid";
+
+		// calculating the relative direction the user needs to turn given the origHeading and newHeading
+
+		double relativeAngle = newHeading - origHeading;
+		String turnDirection = "";
+		// Right turns
+		if (relativeAngle >= 0)
+		{
+			if (relativeAngle < 10)
+			{
+				turnDirection = "Continue";
+			}
+			else if (10 <= relativeAngle && relativeAngle < 60)
+			{
+				turnDirection = "Turn slight right";
+			}
+			else if (60 <= relativeAngle && relativeAngle < 120)
+			{
+				turnDirection = "Turn sharp right";
+			}
+			else if (179 <= relativeAngle)
+			{
+				turnDirection = "U-turn";
+			}
+		}
+		else // Negative heading means left turn.
+		{
+			relativeAngle = -relativeAngle; // Working with absolute values for convenience.
+
+			if (relativeAngle < 10)
+			{
+				turnDirection = "Continue";
+			}
+			else if (10 <= relativeAngle && relativeAngle < 60)
+			{
+				turnDirection = "Turn slight left";
+			}
+			else if (60 <= relativeAngle && relativeAngle < 120)
+			{
+				turnDirection = "Turn sharp left";
+			}
+			else if (179 <= relativeAngle)
+			{
+				turnDirection = "U-turn";
+			}
+		}
+
+		return turnDirection;
+	}
 
 }

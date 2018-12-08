@@ -61,5 +61,6 @@ public class WalkingRouteFormatter extends RouteFormatter {
 		// http://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
 					 
   		// TODO Implement this method
+		return "";
   	}
 }
