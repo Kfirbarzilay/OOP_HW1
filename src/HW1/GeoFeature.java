@@ -205,7 +205,7 @@ public class GeoFeature {
      * distance required to traverse the geographic feature. These
      * values are not necessarily equal.
      */
-    public Double getLength()
+    public double getLength()
     {
         this.checkRep();
         return this.length;

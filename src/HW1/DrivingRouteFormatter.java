@@ -63,7 +63,8 @@ public class DrivingRouteFormatter extends RouteFormatter {
 		assert (0 <= origHeading && origHeading < 360) : "WalkingRouteFormatter assert: origHeading bad value";
 		String heading = this.getTurnString(origHeading, geoFeature.getStartHeading());
 		String gfName = geoFeature.getName();
-		String distance = String.format("%.lf", geoFeature.getLength());
+		double fullDistance =  Math.round(geoFeature.getLength() * 10);
+		String distance = String.format("%,.1f", fullDistance / 10);
 		return String.format("%s onto %s and go %s kilometers.\n", heading, gfName, distance);
   	}
 

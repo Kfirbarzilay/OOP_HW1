@@ -70,13 +70,13 @@ public class GeoSegment  {
   		this.p1 = p1;
   		this.p2 = p2;
   		this.length = p1.distanceTo(p2);
-		if (!this.p1.equals(p2))
+		//if (!this.p1.equals(p2))
 		{
 			this.heading = p1.headingTo(p2);
 		}
-		else
+		//else
 		{
-			this.heading = null;
+			//this.heading = null;
 		}
   		this.checkRep();
   	}
@@ -151,7 +151,7 @@ public class GeoSegment  {
      **/
   	public double getHeading()
 	{
-  		assert  this.length != 0: "Can't calculate heading since length = 0";
+	    assert  this.length != 0: "Can't calculate heading since length = 0";
 		this.checkRep();
   		return this.heading;
   	}

@@ -93,9 +93,10 @@ public abstract class RouteFormatter {
 		// calculating the relative direction the user needs to turn given the origHeading and newHeading
 
 		double relativeAngle = newHeading - origHeading;
+		//relativeAngle = (relativeAngle + 360) % 360;
 		String turnDirection = "";
 		// Right turns
-		if (relativeAngle >= 0)
+		if (0 <= relativeAngle && relativeAngle < 180)
 		{
 			if (relativeAngle < 10)
 			{
@@ -107,16 +108,27 @@ public abstract class RouteFormatter {
 			}
 			else if (60 <= relativeAngle && relativeAngle < 120)
 			{
+				turnDirection = "Turn right";
+			}
+			else if (120 <= relativeAngle && relativeAngle < 179)
+			{
 				turnDirection = "Turn sharp right";
 			}
 			else if (179 <= relativeAngle)
 			{
 				turnDirection = "U-turn";
-			}
+
+            }
 		}
-		else // Negative heading means left turn.
+		else if ((-180 <= relativeAngle && relativeAngle < 0) || relativeAngle > 180) // Negative heading means left turn.
 		{
-			relativeAngle = -relativeAngle; // Working with absolute values for convenience.
+            if(relativeAngle > 180)
+            {
+                relativeAngle -= 360;
+            }
+
+		    relativeAngle = -relativeAngle; // Working with absolute values for convenience.
+
 
 			if (relativeAngle < 10)
 			{
@@ -128,11 +140,19 @@ public abstract class RouteFormatter {
 			}
 			else if (60 <= relativeAngle && relativeAngle < 120)
 			{
+				turnDirection = "Turn left";
+			}
+			else if (120 <= relativeAngle && relativeAngle < 179)
+			{
 				turnDirection = "Turn sharp left";
 			}
 			else if (179 <= relativeAngle)
 			{
 				turnDirection = "U-turn";
+			}
+			else
+			{
+				turnDirection = "Warning: Something is wrong!!!";
 			}
 		}
 

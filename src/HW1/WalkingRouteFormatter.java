@@ -53,7 +53,7 @@ public class WalkingRouteFormatter extends RouteFormatter {
      **/
 
 	// Walking speed = 20 kilometers per hour
-	private static final int walkingSpeed  = 20;
+	private static final double walkingSpeed  = 20;
 
   	public String computeLine(GeoFeature geoFeature, double origHeading) {
   		
@@ -69,7 +69,7 @@ public class WalkingRouteFormatter extends RouteFormatter {
 		assert (0 <= origHeading && origHeading < 360) : "WalkingRouteFormatter assert: origHeading bad value";
 		String heading = this.getTurnString(origHeading, geoFeature.getStartHeading());
 		String gfName = geoFeature.getName();
-		String walkingTime = ((Integer)(geoFeature.getLength() * walkingSpeed)).toString();
-		return String.format("%s onto %s and walk for %s minutes.\n", heading, gfName, walkingTime);
+		Double walkingTime = new Double(Math.round(geoFeature.getLength() * walkingSpeed));
+		return String.format("%s onto %s and walk for %d minutes.\n", heading, gfName, walkingTime.intValue());
   	}
 }

@@ -325,7 +325,7 @@ public class Route {
         // for all integers i
         //     (0 <= i < geoSegments.length-1 => (geoSegments[i].name == geoSegments[i+1].name
         //     && geoSegments[i].p2  == geoSegments[i+1].p1))
-        Iterator<GeoFeature> gfIter = this.getGeoFeatures();
+        // Iterator<GeoFeature> gfIter = this.getGeoFeatures();
         // TODO: Add asserts to check the lists.
     }
 }
