@@ -49,6 +49,7 @@ public class DrivingRouteFormatter extends RouteFormatter {
      * newline and should include no extra spaces other than those shown
      * above.
      **/
+
   	public String computeLine(GeoFeature geoFeature, double origHeading) {
   		
   		// Implementation hint:
@@ -57,8 +58,13 @@ public class DrivingRouteFormatter extends RouteFormatter {
   	    // http://docs.oracle.com/javase/tutorial/java/data/numberformat.html
   		// and at:
   		// http://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
-		   		
-  		// TODO Implement this method
+
+		assert (geoFeature != null) : "WalkingRouteFormatter assert: geoFeature is null";
+		assert (0 <= origHeading && origHeading < 360) : "WalkingRouteFormatter assert: origHeading bad value";
+		String heading = this.getTurnString(origHeading, geoFeature.getStartHeading());
+		String gfName = geoFeature.getName();
+		String distance = String.format("%.lf", geoFeature.getLength());
+		return String.format("%s onto %s and go %s kilometers.\n", heading, gfName, distance);
   	}
 
 }

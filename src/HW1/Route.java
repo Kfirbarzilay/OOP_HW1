@@ -46,7 +46,7 @@ public class Route {
 
     // Representation invariant for each Route:
     // geoFeatures objects cannot consist of the same names
-    //
+    // TODO: Complete RI
 
     // Abstraction Function:
     // A Geographic point constructed by latitude, gp.latitude, and longitude coordinate, gp.longitude.
@@ -313,8 +313,19 @@ public class Route {
 
     private void checkRep()
     {
-    //    assert (startPoint != null) && (endPoint != null) && (0 <= startHeading) && (startHeading < 360)
-    //                && (0 <= endHeading && endHeading < 360) && startHeading != null
-    //                && endHeading) : "Violated Rep. Inv";
+        assert this.startPoint != null && this.endPoint != null : "Route: one of the points have null";
+        assert 0 <= this.startHeading && this.startHeading < 360 : "Route: this.startHeading is not valid";
+        assert 0 <= this.endHeading && this.endHeading < 360 : "Route: this.endHeading is not valid";
+        assert this.geoFeatureList != null && !this.geoFeatureList.isEmpty() : "Route: gf list is not valid";
+        assert this.geoSegList != null && !this.geoSegList.isEmpty() : "Route: gs list is not valid";
+        assert this.length >= 0 : "Route: length is not valid";
+        assert this.endingGeoSeg != null : "Route: endingGeoSeg is null";
+
+        // Now checking geoSegments Rep. Inv.:
+        // for all integers i
+        //     (0 <= i < geoSegments.length-1 => (geoSegments[i].name == geoSegments[i+1].name
+        //     && geoSegments[i].p2  == geoSegments[i+1].p1))
+        Iterator<GeoFeature> gfIter = this.getGeoFeatures();
+        // TODO: Add asserts to check the lists.
     }
 }

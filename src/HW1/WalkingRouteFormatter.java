@@ -51,6 +51,10 @@ public class WalkingRouteFormatter extends RouteFormatter {
      * newline and should include no extra spaces other than those shown
      * above.
      **/
+
+	// Walking speed = 20 kilometers per hour
+	private static final int walkingSpeed  = 20;
+
   	public String computeLine(GeoFeature geoFeature, double origHeading) {
   		
 		// Implementation hint:
@@ -61,5 +65,11 @@ public class WalkingRouteFormatter extends RouteFormatter {
 		// http://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
 					 
   		// TODO Implement this method
+		assert (geoFeature != null) : "WalkingRouteFormatter assert: geoFeature is null";
+		assert (0 <= origHeading && origHeading < 360) : "WalkingRouteFormatter assert: origHeading bad value";
+		String heading = this.getTurnString(origHeading, geoFeature.getStartHeading());
+		String gfName = geoFeature.getName();
+		String walkingTime = ((Integer)(geoFeature.getLength() * walkingSpeed)).toString();
+		return String.format("%s onto %s and walk for %s minutes.\n", heading, gfName, walkingTime);
   	}
 }
