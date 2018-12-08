@@ -57,8 +57,7 @@ public class GeoFeature {
 	private final Double length;
 
 	// Representation invariant:
-	// this.start and this.end hold for the GeoPoint checkRep() method.
-	// this.start and this.end hold for the GeoSegment checkRep() method.
+	// this.start and this.end are instances of GeoPoint.
 	// this.startHeading and this.endHeading are non-negative real values less than 360.
 	// this.geoSegments is not empty and all segments have the same name.
 	// this.name is a non empty string of letters.
@@ -68,7 +67,6 @@ public class GeoFeature {
 	// A GeoFeature with a name, this.name, that has a starting point, this.start, and an ending point, this.end,
 	// consisted of a non empty list of GeoSegments, this.geoSegments all with the same name, this.name, such that the
 	// first segment is connected to this.start and with a heading equal to this.startHeading and the last segment is
-	// connected to this.end with a heading equal to this.endHeading.
 
 	/**
      * Constructs a new GeoFeature.
@@ -207,7 +205,7 @@ public class GeoFeature {
      * distance required to traverse the geographic feature. These
      * values are not necessarily equal.
      */
-    public double getLength()
+    public Double getLength()
     {
         this.checkRep();
         return this.length;
@@ -341,17 +339,7 @@ public class GeoFeature {
 			return geoFeatureString;
 		}
 
-	// Representation invariant:
-	// this.start and this.end are instances of GeoPoint.
-	// this.startHeading and this.endHeading are non-negative real values less than 360.
-	// this.geoSegments is not empty and all segments have the same name.
-	// this.name is a non empty string of letters.
-	// this.length >= 0.
 
-	// Abstraction Function:
-	// A GeoFeature with a name, this.name, that has a starting point, this.start, and an ending point, this.end,
-	// consisted of a non empty list of GeoSegments, this.geoSegments all with the same name, this.name, such that the
-	// first segment is connected to this.start and with a heading equal to this.startHeading and the last segment is
 	// connected to this.end with a heading equal to this.endHeading.
 	private void checkRep()
 	{
