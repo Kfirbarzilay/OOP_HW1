@@ -232,7 +232,8 @@ public class RouteFormatterGUI extends JPanel {
 			{
 				// We need to get the heading at the end of the current feature.
 				prevGeoFeatureHeading = this.route.getEndHeading();
-				this.route = this.route.addSegment(segment);
+				Route newRoute =  this.route.addSegment(segment);
+				this.route = newRoute;
 				walking = walkingDirections.computeLine(this.route.getEndFeature(), prevGeoFeatureHeading);
 				driving = drivingDirections.computeLine(this.route.getEndFeature(), prevGeoFeatureHeading);
 

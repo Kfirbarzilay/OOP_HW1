@@ -107,7 +107,7 @@ public class Route {
     {
         assert prevRoute != null: "Got a null Route";
         assert gs != null: "Got a null GeoSegment";
-        assert gs.getP1() == this.getEnd(): "prev end != new start";
+        assert gs.getP1().equals(prevRoute.getEnd()): "prev end != new start";
         this.startPoint = prevRoute.getStart();
         this.endPoint = gs.getP2();
         this.startHeading = prevRoute.getStartHeading();
@@ -218,7 +218,8 @@ public class Route {
     {
         assert gs != null: "Got a null GeoSegment";
         this.checkRep();
-        return new Route(this, gs);
+        Route newRoute = new Route(this, gs);
+        return newRoute;
     }
 
 
@@ -313,18 +314,20 @@ public class Route {
      * Returns a string representation of this.
      * @return a string representation of this.
      **/
+    @Override
   	public String toString() {
-        String str1 = String.format("Route: begins at: %s, ends at: %s", this.startPoint, this.endPoint);
-        String str2 = String.format("heading from: %s, heading to: %s", this.startHeading, this.endHeading);
-        String str3 = String.format("Route length is: %s kilometers", this.length.toString());
-        String appendStr = str1 + str2 + str3;
-        Iterator<GeoFeature> it = this.getGeoFeatures();
-        while (it.hasNext())
-        {
-            appendStr = appendStr + it.toString() + "\n";
-            it.next();
-        }
-        return appendStr;
+//        String str1 = String.format("Route: begins at: %s, ends at: %s", this.startPoint, this.endPoint);
+//        String str2 = String.format("heading from: %s, heading to: %s", this.startHeading, this.endHeading);
+//        String str3 = String.format("Route length is: %s kilometers", this.length.toString());
+//        String appendStr = str1 + str2 + str3;
+//        Iterator<GeoFeature> it = this.getGeoFeatures();
+//        while (it.hasNext())
+//        {
+//            appendStr = appendStr + it.toString() + "\n";
+//            it.next();
+//        }
+//        return appendStr;
+        return "";
     }
 
     private void checkRep()
