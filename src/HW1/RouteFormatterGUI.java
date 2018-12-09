@@ -1,6 +1,7 @@
 package HW1;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -24,12 +25,23 @@ public class RouteFormatterGUI extends JPanel {
 	private JTextArea txtWalkingDirections;
 	private JTextArea txtDrivingDirections;
 
+	// We need to create both DrivingRouteFormatter and WalkingRouteFormatter
+	private DrivingRouteFormatter drivingDirections;
+	private WalkingRouteFormatter walkingDirections;
+
+	// We need to get the heading at the end of the current feature.
+	Double prevGeoFeatureHeading;
 
 	/**
 	 * Creates a new RoutFormatterGUI JPanel.
 	 * @effects Creates a new RoutFormatterGUI JPanel contained in frame.
 	 */
-	public RouteFormatterGUI(JFrame frame) {
+	public RouteFormatterGUI(JFrame frame)
+	{
+		// Initializing the formatters.
+		drivingDirections = new DrivingRouteFormatter();
+		walkingDirections = new WalkingRouteFormatter();
+
 		// create a GeoSegmentsDialog (secondary window)
 		dlgSegments = new GeoSegmentsDialog(frame, this);
 		dlgSegments.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -141,12 +153,109 @@ public class RouteFormatterGUI extends JPanel {
 	 * 			with the return value of
 	 * 			RouteDirection.computeDirections(this.route,0)
 	 */
-	public void addSegment(GeoSegment segment) {
+	public void addSegment(GeoSegment segment)
+	{
 		DefaultListModel<GeoSegment> model =
 				(DefaultListModel<GeoSegment>)(this.lstSegments.getModel());
-		
-		// TODO Write the body of this method
+		assert segment != null;
+
+		// Add segment to list
+		model.addElement(segment);
+		String walking, driving;
+
+		boolean firstFeature = false;
+
+		if(this.route == null)
+		{
+			this.route = new Route(segment);
+			walking = walkingDirections.computeLine(this.route.getEndFeature(),0);
+			driving = drivingDirections.computeLine(this.route.getEndFeature(),0);
+
+			txtWalkingDirections.append(walking);
+			txtDrivingDirections.append(driving);
+		}
+		else
+		{
+			// First, check if the new added segment has the same name as the last feature.
+			boolean sameFeature = this.route.getEndFeature().getName().equals(segment.getName());
+
+			// Get the feature's list size: used to determine whether we only have one feature.
+			int numOfFeatures = this.route.getGeoFeaturesSize();
+
+			if (numOfFeatures == 1 && firstFeature == false)
+			{
+				firstFeature = true;
+			}
+
+
+			if (sameFeature)
+			{
+				this.route = this.route.addSegment(segment);
+
+				if (firstFeature) // Corner case for only one feature in the route's list
+				{
+					walking = walkingDirections.computeLine(this.route.getEndFeature(),0);
+					driving = drivingDirections.computeLine(this.route.getEndFeature(),0);
+				}
+				else
+				{
+					walking = walkingDirections.computeLine(this.route.getEndFeature(), prevGeoFeatureHeading);
+					driving = drivingDirections.computeLine(this.route.getEndFeature(), prevGeoFeatureHeading);
+				}
+
+				// Overwriting this feature directions.
+				// find the index of the last line
+				int numOfLines1 = this.txtWalkingDirections.getLineCount();
+				int numOfLines2 = this.txtDrivingDirections.getLineCount();
+				// get the start and end offset of the last line
+				int startIndex1 = 0;
+				int startIndex2 = 0;
+				int endIndex1 = 0;
+				int endIndex2 = 0;
+				try
+				{
+					startIndex1 = this.txtWalkingDirections.getLineStartOffset(numOfLines1-2);
+					startIndex2 = this.txtDrivingDirections.getLineStartOffset(numOfLines2-2);
+					endIndex1 = this.txtWalkingDirections.getLineEndOffset(numOfLines1-2);
+					endIndex2 = this.txtDrivingDirections.getLineEndOffset(numOfLines2-2);
+				}
+				catch (BadLocationException e)
+				{
+					e.printStackTrace();
+				}
+
+				// replace the text.
+				this.txtWalkingDirections.replaceRange(walking, startIndex1, endIndex1);
+				this.txtDrivingDirections.replaceRange(driving, startIndex2, endIndex2);
+			}
+			else // A new Feature is added.
+			{
+				// We need to get the heading at the end of the current feature.
+				prevGeoFeatureHeading = this.route.getEndHeading();
+				this.route = this.route.addSegment(segment);
+				walking = walkingDirections.computeLine(this.route.getEndFeature(), prevGeoFeatureHeading);
+				driving = drivingDirections.computeLine(this.route.getEndFeature(), prevGeoFeatureHeading);
+
+				// Append the new feature's directions to panel.
+				txtWalkingDirections.append(walking);
+				txtDrivingDirections.append(driving);
+
+			}
+
+		}
+
+
+
 	}
+
+    /**
+     * returns this route
+     * @return this route
+     */
+    public Route getRoute()
+    {
+        return this.route;
+    }
 
 
     public static void main(String[] args) {

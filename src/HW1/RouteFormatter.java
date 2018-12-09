@@ -150,13 +150,11 @@ public abstract class RouteFormatter {
 			{
 				turnDirection = "U-turn";
 			}
-			else
-			{
-				turnDirection = "Warning: Something is wrong!!!";
-			}
+
 		}
 
 		return turnDirection;
 	}
+
 
 }

@@ -222,7 +222,6 @@ public class GeoPoint {
                 && (MIN_LONGITUDE <= this.longitude &&  this.longitude <= MAX_LONGITUDE)
                 : "Violated Rep. Inv";
     }
-  	// TODO: check if more methods needed.
 
 
 }

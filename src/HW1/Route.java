@@ -45,8 +45,14 @@ public class Route {
     private final GeoSegment endingGeoSeg;
 
     // Representation invariant for each Route:
-    // geoFeatures objects cannot consist of the same names
-    // TODO: Complete RI
+    // Route is a sequence of GeoSegments (or GeoFeatures) such that for all integers i
+    //	(0 <= i < geoSegments.length => (geoSegments[i].name == geoSegments[i+1].name
+    //										&& geoSegments[i].p2  == geoSegments[i+1].p1))
+    // this.startHeading and this.endHeading are non-negative real values less than 360.
+    // geoFeatures names in the geoFeatureList are unique.
+    // geoFeatureList is abstractly comprised of geoSegments such that the names of the geoSegments are in the same order
+    //
+    // this.length >= 0.
 
     // Abstraction Function:
     // A Geographic point constructed by latitude, gp.latitude, and longitude coordinate, gp.longitude.
@@ -148,9 +154,19 @@ public class Route {
   	public GeoPoint getEnd()
     {
   		this.checkRep();
-  		return new GeoPoint(startPoint.getLatitude(), endPoint.getLongitude());
+  		return new GeoPoint(endPoint.getLatitude(), endPoint.getLongitude());
   	}
 
+    /**
+     * Returns location of the end of the route.
+     * @return location of the end of the route.
+     **/
+    public GeoFeature getEndFeature()
+    {
+        this.checkRep();
+        int geoFeaturesListSize = this.geoFeatureList.size();
+        return this.geoFeatureList.get(geoFeaturesListSize - 1);
+    }
 
   	/**
   	 * Returns direction of travel at the start of the route, in degrees.
@@ -326,6 +342,25 @@ public class Route {
         //     (0 <= i < geoSegments.length-1 => (geoSegments[i].name == geoSegments[i+1].name
         //     && geoSegments[i].p2  == geoSegments[i+1].p1))
         // Iterator<GeoFeature> gfIter = this.getGeoFeatures();
-        // TODO: Add asserts to check the lists.
+        // check if the geoSegments sequence corresponds to the geoFeatures sequence.
+        Iterator<GeoSegment> geoSegmentIterator = geoSegList.iterator();
+        Iterator<GeoFeature> geoFeatureIterator =  geoFeatureList.iterator();
+        Iterator<GeoSegment> gsIter2; // will run on each GeoFeature's segments.
+        boolean isEqual;
+        while(geoFeatureIterator.hasNext())
+        {
+            gsIter2 = geoFeatureIterator.next().getGeoSegments();
+            while(gsIter2.hasNext())
+            {
+                assert(geoSegmentIterator.hasNext());
+                isEqual = gsIter2.next().equals(geoSegmentIterator.next());
+                assert(isEqual);
+            }
+        }
+    }
+
+    public int getGeoFeaturesSize()
+    {
+        return this.geoFeatureList.size();
     }
 }

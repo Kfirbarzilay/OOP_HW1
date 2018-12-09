@@ -57,7 +57,9 @@ public class GeoFeature {
 	private final Double length;
 
 	// Representation invariant:
-	// this.start and this.end are instances of GeoPoint.
+	// GeoFeature is a sequence of GeoSegments such that for all integers i
+	//	(0 <= i < geoSegments.length => (geoSegments[i].name == geoSegments[i+1].name
+	//										&& geoSegments[i].p2  == geoSegments[i+1].p1))
 	// this.startHeading and this.endHeading are non-negative real values less than 360.
 	// this.geoSegments is not empty and all segments have the same name.
 	// this.name is a non empty string of letters.
@@ -84,7 +86,7 @@ public class GeoFeature {
 		this.start = gs.getP1();
 		this.end = gs.getP2();
 		this.startHeading = gs.getHeading();
-		this.endHeading = gs.getHeading(); // TODO: Check why we use the same heading.
+		this.endHeading = gs.getHeading();
 
 		// Add the GeoSegment to the list
 		this.geoSegments = new ArrayList<>();
@@ -363,6 +365,7 @@ public class GeoFeature {
 			if (iter.hasNext())
 			{
 				GeoSegment nextGeoSegment = iter.next();
+				assert this.name.equals(nextGeoSegment.getName()) : "GeoSegment don't have the same name: " + nextGeoSegment ;
 				assert currSeg.getP2().equals(nextGeoSegment.getP1()): "GeoSegment " + currSeg + " and GeoSegment " + nextGeoSegment
 						+ " are not connected";
 
